@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+<script src="assets/js/gate.js"></script>
+<title>Letters — Thanu &amp; Thamil</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,600&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+
+<section style="padding-bottom:24px">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">💌 Open when…</span>
+      <h1 class="display" style="font-size:clamp(2.2rem,6vw,4.2rem)">Sealed <span class="gradient-text">Letters</span></h1>
+      <p class="lead">Six envelopes. Open the one that fits your day — they are not going anywhere.</p>
+    </div>
+    <div class="letters-grid stagger" id="envs"></div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- ============ 16 REASONS ============ -->
+<section style="padding-top:0" id="reasons">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">💭 One for each</span>
+      <h2>Sixteen <span class="gradient-text">reasons</span></h2>
+      <p class="lead">Four reasons for every year. Flip them all — there is something at the end.</p>
+    </div>
+    <div class="flip-grid stagger" id="flips"></div>
+    <p class="center lead mt-l" id="flipCount"></p>
+    <div class="center" id="flipAll" style="display:none;margin-top:10px"></div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- ============ THE LONG LETTER ============ -->
+<section style="padding-top:0">
+  <div class="wrap-narrow">
+    <div class="card spot glow reveal" style="padding:clamp(30px,5vw,54px)">
+      <span class="eyebrow">✍️ The actual letter</span>
+      <h2>To <span class="gradient-text">Thamil</span>, on four years</h2>
+
+      <div class="script" style="font-size:clamp(1.15rem,2.4vw,1.5rem);color:var(--text);line-height:1.6">
+        <p>It started at 10:44 at night on the twenty-third of October. A message. Nothing else.</p>
+        <p>Three weeks later I told you at 11:11 in the morning, and then I spent the whole day working myself up to ask you properly at 10:51 that night. You took two days. On the sixteenth of November you said yes, and that is the day everything on this website counts from.</p>
+        <p>Then 8:37 in the morning on the eighteenth — the first "love you", typed. Then 7:15 the next evening, out loud, in your actual voice. I wrote all of those times down. Most people keep the day. I wanted the minute.</p>
+        <p>We had our worst fight on the twenty-third of November, seven days in. One day without talking. It felt enormous and it is now one short line on a timeline four years long.</p>
+        <p>We numbered the first five meet-ups because they were rare enough to count — the twenty-first of November, then twenty days, then three whole months. After the fifth we stopped counting, which is its own kind of answer.</p>
+        <p>There are sixty-three photographs of us here. The oldest is a blue-lit evening on the twenty-sixth of October 2022, before any of it had a name. The newest is exactly four years later, both of us in helmets, going somewhere. In between: a field in October where we came back wearing rings, letters taller than we are, water to the horizon, a saree, balloons, salt in your hair. Almost none of them are special occasions. That is the part I like most.</p>
+        <p>You fed me before you ate. You stayed when it was not easy. You laughed at your own jokes before you finished them, every time, and I never once got tired of it.</p>
+        <p>So: one thousand four hundred and sixty-one days, and the number goes up again tomorrow.</p>
+        <p style="color:var(--rose-soft)">I would choose you again. Every single time.</p>
+        <p style="text-align:right">— Thanu 💞</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap-narrow center reveal">
+    <div class="card spot glow" style="padding:clamp(30px,5vw,50px)">
+      <span class="eyebrow">🏠 Back to the start</span>
+      <h2>Happy anniversary, <span class="gradient-text">Thamil</span></h2>
+      <p class="lead">That is the whole place. Go round it as many times as you like.</p>
+      <a class="btn" href="index.html" style="margin-top:12px">🏠 Back home</a>
+    </div>
+  </div>
+</section>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+function initPage(){
+
+  /* ================= ENVELOPES ================= */
+  var host = document.getElementById('envs');
+  LETTERS.forEach(function(l){
+    var d = document.createElement('div');
+    d.className = 'env no-burst';
+    d.innerHTML =
+      '<div class="env-body"></div>' +
+      '<div class="env-note">' + l.text + '</div>' +
+      '<div class="env-flap"></div>' +
+      '<div class="env-seal">' + l.emo + '</div>' +
+      '<div class="env-label">' + l.label + '</div>';
+    d.addEventListener('click', function(){
+      var wasOpen = d.classList.contains('open');
+      d.classList.toggle('open');
+      if (!wasOpen) A.confetti(26);
+    });
+    host.appendChild(d);
+  });
+
+  /* ================= 16 REASONS ================= */
+  var flips = document.getElementById('flips');
+  var flipped = 0;
+  REASONS.forEach(function(r, i){
+    var d = document.createElement('div');
+    d.className = 'flip no-burst';
+    d.innerHTML =
+      '<div class="flip-in">' +
+        '<div class="flip-face flip-front">' +
+          '<div><span class="femo">' + r.e + '</span>' +
+          '<div class="fnum">' + (i + 1) + '</div>' +
+          '<div class="fhint">Tap to flip</div></div>' +
+        '</div>' +
+        '<div class="flip-face flip-back"><span>' + r.t + '</span></div>' +
+      '</div>';
+    d.addEventListener('click', function(){
+      if (!d.classList.contains('on')){
+        flipped++;
+        updateFlips();
+        A.confetti(12);
+      }
+      d.classList.toggle('on');
+    });
+    flips.appendChild(d);
+  });
+
+  function updateFlips(){
+    var c = document.getElementById('flipCount');
+    c.textContent = flipped + ' of ' + REASONS.length + ' turned over';
+    if (flipped === REASONS.length){
+      c.textContent = 'All sixteen. 💞';
+      var box = document.getElementById('flipAll');
+      box.style.display = 'block';
+      box.innerHTML =
+        '<div class="card spot glow" style="max-width:600px;margin:0 auto;animation:popIn .8s var(--ease-back)">' +
+          '<div style="font-size:46px">💖</div>' +
+          '<h3>And about four hundred more</h3>' +
+          '<p class="lead" style="margin:0">Sixteen was just what fit on the page. ' +
+          'Ask me any day and I will keep going until you tell me to stop.</p>' +
+        '</div>';
+      A.confetti(220);
+      A.toast('Every single one of them true 💞');
+      box.scrollIntoView({ behavior:'smooth', block:'center' });
+    }
+  }
+  updateFlips();
+}
+</script>
+</body>
+</html>

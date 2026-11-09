@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+<script src="assets/js/gate.js"></script>
+<title>Our Story — Thanu &amp; Thamil</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗓️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,600&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+
+<section style="padding-bottom:30px">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">🗓️ Four years, in order</span>
+      <h1 class="display" style="font-size:clamp(2.2rem,6vw,4.2rem)">Our <span class="gradient-text">Story</span></h1>
+      <p class="lead">Scroll slowly. The line fills as you go, and every photo opens if you tap it.</p>
+    </div>
+
+    <div class="year-rail reveal" id="yearRail"></div>
+
+    <div class="note-strip reveal" style="max-width:700px;margin:0 auto 20px">
+      <span class="ns-emo">💡</span>
+      <span>It starts <strong>before</strong> day one — a message on 23 October 2022 and a photo three days later.
+      We were already something, we just had not said it yet. The lines in
+      <em style="font-family:var(--script);font-size:1.15em;font-style:normal">this handwriting</em> are your own words, exactly as you wrote them down.</span>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:10px">
+  <div class="wrap">
+    <div class="tl" id="tl">
+      <div class="tl-spine"><div class="tl-fill" id="tlFill"></div></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap-narrow center reveal">
+    <div class="card spot glow" style="padding:clamp(30px,5vw,50px)">
+      <span class="eyebrow">💞 And then?</span>
+      <h2>Year five is <span class="gradient-text">already loading</span></h2>
+      <p class="lead">Four years of photos and we are nowhere near finished. Next page: all of them, properly sorted.</p>
+      <a class="btn" href="albums.html" style="margin-top:12px">📸 Open the albums</a>
+    </div>
+  </div>
+</section>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+function initPage(){
+  var tl = document.getElementById('tl');
+
+  /* ---------- build the timeline ---------- */
+  TIMELINE.forEach(function(m, i){
+    var item = document.createElement('div');
+    item.className = 'tl-item reveal ' + (i % 2 === 0 ? 'left' : 'right') +
+                     (m.k === 'star' ? ' keyday' : '');
+    item.dataset.year = m.d.slice(0,4);
+
+    var html = '<span class="tl-dot">' + m.e + '</span>' +
+      '<div class="tl-card card spot glow">' +
+        '<span class="tl-date">' + A.fmtDate(m.d) +
+          (m.time ? '<em class="tl-time">' + m.time + '</em>' : '') + '</span>' +
+        (m.meet ? '<span class="tl-meet">Meet-up #' + m.meet + '</span>' : '') +
+        '<h3>' + m.t + '</h3>' +
+        '<p>' + m.x + '</p>';
+
+    if (m.p){
+      var ph = A.photo(m.p);
+      /* the card follows the photo's own shape, so nobody's head gets cropped */
+      html += '<img class="tl-photo" data-o="' + (ph ? ph.o : 'l') + '" src="assets/thumbs/' +
+              m.p + '.jpg" alt="' + (ph ? ph.cap : '') +
+              '" data-id="' + m.p + '" loading="lazy">';
+    }
+    /* your own words from the memories file, kept exactly as you wrote them */
+    if (m.tam) html += '<span class="tl-tam">“' + m.tam + '”</span>';
+    html += '<span class="tl-tag">' + A.daysLabel(m.d) + '</span></div>';
+    item.innerHTML = html;
+    tl.appendChild(item);
+  });
+
+  /* ---------- photos open in the lightbox ---------- */
+  var tlIds = TIMELINE.filter(function(m){ return m.p; }).map(function(m){ return m.p; });
+  tl.addEventListener('click', function(e){
+    var img = e.target.closest('.tl-photo');
+    if (!img) return;
+    A.openLb(tlIds, tlIds.indexOf(img.dataset.id));
+  });
+
+  /* ---------- year chips ---------- */
+  var years = [];
+  TIMELINE.forEach(function(m){
+    var y = m.d.slice(0,4);
+    if (years.indexOf(y) === -1) years.push(y);
+  });
+  var rail = document.getElementById('yearRail');
+  years.forEach(function(y){
+    var b = document.createElement('button');
+    b.className = 'year-chip';
+    b.textContent = y;
+    b.addEventListener('click', function(){
+      var first = tl.querySelector('[data-year="' + y + '"]');
+      if (!first) return;
+      var top = first.getBoundingClientRect().top + window.scrollY - 110;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+      A.$$('.year-chip').forEach(function(c){ c.classList.remove('active'); });
+      b.classList.add('active');
+    });
+    rail.appendChild(b);
+  });
+
+  /* ---------- spine fill + active chip on scroll ---------- */
+  var fill = document.getElementById('tlFill');
+  var items = A.$$('.tl-item');
+  function onScroll(){
+    var r = tl.getBoundingClientRect();
+    var mid = window.innerHeight * 0.55;
+    var p = (mid - r.top) / r.height;
+    fill.style.height = Math.max(0, Math.min(1, p)) * 100 + '%';
+
+    var cur = null;
+    items.forEach(function(it){
+      var b = it.getBoundingClientRect();
+      if (b.top < mid) cur = it.dataset.year;
+      it.classList.toggle('in', b.top < window.innerHeight * 0.85);
+    });
+    if (cur){
+      A.$$('.year-chip').forEach(function(c){
+        c.classList.toggle('active', c.textContent === cur);
+      });
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
+
+  /* ---------- confetti when the last moment appears ---------- */
+  var last = items[items.length - 1];
+  if (last && 'IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(en){
+      if (en[0].isIntersecting){
+        A.confetti(120);
+        A.toast('Four years. 💞 Happy anniversary, ' + CONFIG.her + '!');
+        io.disconnect();
+      }
+    }, { threshold:.5 });
+    io.observe(last);
+  }
+
+  A.observe('.tl-item');
+}
+</script>
+</body>
+</html>

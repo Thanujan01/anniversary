@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+<script src="assets/js/gate.js"></script>
+<title>Albums — Thanu &amp; Thamil</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📸</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,600&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+
+<section style="padding-bottom:26px">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">📸 The whole collection</span>
+      <h1 class="display" style="font-size:clamp(2.2rem,6vw,4.2rem)">Our <span class="gradient-text">Albums</span></h1>
+      <p class="lead" id="albumsLead"></p>
+    </div>
+
+    <div class="album-tabs reveal" id="tabs"></div>
+
+    <div class="center reveal" style="margin-bottom:28px">
+      <p class="lead" id="albumDesc" style="font-size:.95rem;margin-bottom:14px"></p>
+      <button class="btn sm" id="slideBtn">▶️ Play as a slideshow</button>
+      <button class="btn ghost sm" id="favBtn">💖 Show favourites</button>
+      <button class="btn ghost sm" id="shuffleBtn">🔀 Shuffle</button>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="masonry" id="grid"></div>
+    <p class="center lead" id="empty" style="display:none;margin-top:30px">
+      No favourites yet — tap the little heart on any photo 💖
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap-narrow center reveal">
+    <div class="card spot glow" style="padding:clamp(30px,5vw,50px)">
+      <span class="eyebrow">🧠 Still more</span>
+      <h2>There are <span class="gradient-text">polaroids</span> next door</h2>
+      <p class="lead">A whole wall of them, plus a memory jar and a quiz I am fairly sure you will beat me at.</p>
+      <a class="btn" href="memories.html" style="margin-top:12px">🧠 Go to Memories</a>
+    </div>
+  </div>
+</section>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+function initPage(){
+  var grid     = document.getElementById('grid');
+  var tabsHost = document.getElementById('tabs');
+  var current  = 'all';
+  var favMode  = false;
+  var shuffled = false;
+  var viewIds  = [];
+
+  document.getElementById('albumsLead').textContent =
+    PHOTOS.length + ' photographs, ' + A.shortDate(PHOTOS[0].date) + ' to ' +
+    A.shortDate(PHOTOS[PHOTOS.length - 1].date) +
+    '. Five years of them, plus a few small collections. Tap any photo to open it full size.';
+
+  /* A photo belongs to one year album (p.a) and any number of
+     collections (p.t), so both kinds of tab filter the same way. */
+  function inAlbum(p, key){
+    return key === 'all' || p.a === key || (p.t && p.t.indexOf(key) > -1);
+  }
+
+  function listFor(key){
+    var out = PHOTOS.filter(function(p){ return inAlbum(p, key); });
+    if (favMode){
+      var f = A.favs();
+      out = out.filter(function(p){ return f.indexOf(p.id) > -1; });
+    }
+    if (shuffled){
+      for (var i = out.length - 1; i > 0; i--){
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = out[i]; out[i] = out[j]; out[j] = t;
+      }
+    }
+    return out;
+  }
+
+  /* ---------- tabs ---------- */
+  var sawSection = false;
+  ALBUMS.forEach(function(al){
+    /* the collections sit after a thin divider, away from the year chapters */
+    if (al.sec && !sawSection){
+      sawSection = true;
+      var hr = document.createElement('span');
+      hr.className = 'tab-split';
+      hr.setAttribute('aria-hidden', 'true');
+      tabsHost.appendChild(hr);
+    }
+    var count = PHOTOS.filter(function(p){ return inAlbum(p, al.key); }).length;
+    var b = document.createElement('button');
+    b.className = 'album-tab' + (al.key === current ? ' active' : '');
+    b.dataset.key = al.key;
+    b.innerHTML = '<span>' + al.emo + '</span>' + al.name + ' <span class="n">' + count + '</span>';
+    b.addEventListener('click', function(){
+      current = al.key;
+      favMode = false;
+      document.getElementById('favBtn').classList.remove('on');
+      document.getElementById('favBtn').innerHTML = '💖 Show favourites';
+      A.$$('.album-tab').forEach(function(t){ t.classList.toggle('active', t.dataset.key === current); });
+      render();
+    });
+    tabsHost.appendChild(b);
+  });
+
+  /* ---------- render ---------- */
+  function render(){
+    var list = listFor(current);
+    viewIds = list.map(function(p){ return p.id; });
+    var album = ALBUMS.filter(function(a){ return a.key === current; })[0];
+    document.getElementById('albumDesc').textContent =
+      favMode ? 'Your favourites — ' + list.length + ' photo' + (list.length === 1 ? '' : 's') + '.'
+              : (album ? album.desc : '');
+    document.getElementById('empty').style.display = list.length ? 'none' : 'block';
+
+    grid.innerHTML = '';
+    var favs = A.favs();
+    list.forEach(function(p, i){
+      var fig = document.createElement('figure');
+      fig.className = 'm-item';
+      fig.style.margin = '0 0 16px';
+      fig.dataset.delay = Math.min(i, 12) * 45;
+      fig.innerHTML =
+        '<button class="m-fav no-burst' + (favs.indexOf(p.id) > -1 ? ' on' : '') +
+          '" data-id="' + p.id + '" aria-label="Favourite">' +
+          (favs.indexOf(p.id) > -1 ? '💖' : '🤍') + '</button>' +
+        '<img src="assets/thumbs/' + p.id + '.jpg" alt="' + p.cap + '" loading="lazy">' +
+        '<figcaption class="m-cap">' + p.cap + '<small>' + A.shortDate(p.date) + '</small></figcaption>';
+      fig.addEventListener('click', function(e){
+        if (e.target.closest('.m-fav')) return;
+        A.openLb(viewIds, i);
+      });
+      grid.appendChild(fig);
+    });
+    A.observe('.m-item');
+  }
+
+  /* ---------- favourite toggle ---------- */
+  grid.addEventListener('click', function(e){
+    var b = e.target.closest('.m-fav');
+    if (!b) return;
+    e.stopPropagation();
+    var on = A.toggleFav(b.dataset.id);
+    b.classList.toggle('on', on);
+    b.innerHTML = on ? '💖' : '🤍';
+    if (on){ A.confetti(14); A.toast('Added to your favourites 💖'); }
+    if (favMode) render();
+  });
+
+  /* ---------- buttons ---------- */
+  document.getElementById('favBtn').addEventListener('click', function(){
+    favMode = !favMode;
+    this.classList.toggle('on', favMode);
+    this.innerHTML = favMode ? '📸 Show all again' : '💖 Show favourites';
+    render();
+  });
+
+  document.getElementById('shuffleBtn').addEventListener('click', function(){
+    shuffled = true;
+    render();
+    A.toast('Shuffled 🔀');
+  });
+
+  /* ---------- slideshow ---------- */
+  var slideTimer = null;
+  document.getElementById('slideBtn').addEventListener('click', function(){
+    if (!viewIds.length) return;
+    A.openLb(viewIds, 0);
+    A.toast('Slideshow running — press Esc to stop ▶️');
+    clearInterval(slideTimer);
+    slideTimer = setInterval(function(){
+      var lb = document.getElementById('lightbox');
+      if (!lb.classList.contains('open')){ clearInterval(slideTimer); return; }
+      A.lbStep(1);
+    }, 3200);
+  });
+
+  render();
+}
+</script>
+</body>
+</html>

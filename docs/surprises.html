@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+<script src="assets/js/gate.js"></script>
+<title>Surprises — Thanu &amp; Thamil</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,600&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+
+<section style="padding-bottom:24px">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">🎁 Do not open them all at once</span>
+      <h1 class="display" style="font-size:clamp(2.2rem,6vw,4.2rem)">Your <span class="gradient-text">Surprises</span></h1>
+      <p class="lead">Six coupons, one scratch card, a wheel that decides our next day out, and something locked.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GIFT BOXES ============ -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">🎀 Six coupons</span>
+      <h2>Real ones. <span class="gradient-text">No expiry.</span></h2>
+      <p class="lead">Every one of these is something I will actually do. Tap a box to open it.</p>
+    </div>
+    <div class="gifts stagger" id="gifts"></div>
+    <p class="center lead" id="giftCount" style="margin-top:24px"></p>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- ============ SCRATCH CARD ============ -->
+<section style="padding-top:0">
+  <div class="wrap-narrow">
+    <div class="section-head reveal">
+      <span class="eyebrow">🪙 Scratch it</span>
+      <h2>There is something <span class="gradient-text">under the gold</span></h2>
+      <p class="lead">Rub it off with your finger or your mouse. All of it.</p>
+    </div>
+    <div class="reveal zoom">
+      <div class="scratch-wrap">
+        <div class="scratch-under">
+          <img src="assets/photos/one.jpg" alt="Our two names, handwritten in red on paper">
+        </div>
+        <canvas id="scratchCanvas"></canvas>
+      </div>
+      <p class="scratch-hint" id="scratchHint">Scratch to reveal ✨</p>
+      <div class="scratch-after" id="scratchAfter">
+        <p class="script">Thanujan &amp; Thamiliny</p>
+        <p class="lead" style="font-size:.95rem;margin:0">
+          Two names, one piece of paper, drawn by hand in red.
+          Everything else on this website is pixels. This one is real.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- ============ WHEEL ============ -->
+<section style="padding-top:0">
+  <div class="wrap-narrow">
+    <div class="section-head reveal">
+      <span class="eyebrow">🎡 Let fate decide</span>
+      <h2>Our <span class="gradient-text">next day out</span></h2>
+      <p class="lead">Spin it. Whatever it lands on, I am in — no arguments, no rescheduling.</p>
+    </div>
+    <div class="reveal zoom center">
+      <div class="wheel-wrap">
+        <div class="wheel-pin">📍</div>
+        <canvas class="wheel" id="wheel" width="600" height="600"></canvas>
+        <div class="wheel-hub">💞</div>
+      </div>
+      <button class="btn" id="spinBtn">🎡 Spin the wheel</button>
+      <div class="wheel-out mt-l" id="wheelOut"></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- ============ LOVE METER ============ -->
+<section style="padding-top:0">
+  <div class="wrap-narrow">
+    <div class="card spot glow reveal zoom center meter" style="padding:clamp(34px,5vw,52px)">
+      <span class="eyebrow">📈 Scientific instrument</span>
+      <h2>The <span class="gradient-text">love meter</span></h2>
+      <p class="lead">Calibrated over four years. Results have been consistent.</p>
+      <div class="meter-bar"><div class="meter-fill" id="meterFill"></div></div>
+      <div class="meter-val" id="meterVal">0%</div>
+      <p class="lead" id="meterMsg" style="margin:0"></p>
+      <button class="btn ghost sm" id="meterBtn" style="margin-top:18px">🔬 Measure again</button>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- ============ LOCKED VAULT ============ -->
+<section style="padding-top:0">
+  <div class="wrap-narrow">
+    <div class="card spot glow reveal zoom center" id="vault" style="padding:clamp(34px,5vw,52px)">
+      <span class="eyebrow">🔒 Locked</span>
+      <h2>The <span class="gradient-text">vault</span></h2>
+      <p class="lead" id="vaultHint">
+        One last thing, locked behind a number only you would know.<br>
+        <strong>The day we started, as eight digits.</strong> (DDMMYYYY)
+      </p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px">
+        <input id="vaultInput" inputmode="numeric" maxlength="8" placeholder="• • • • • • • •"
+          style="padding:14px 20px;border-radius:99px;background:rgba(255,255,255,.07);
+                 border:1px solid rgba(255,255,255,.18);color:#fff;font-size:1.1rem;
+                 letter-spacing:.3em;text-align:center;width:230px;font-family:inherit;outline:none">
+        <button class="btn" id="vaultBtn">🔓 Unlock</button>
+      </div>
+      <div id="vaultOut" style="margin-top:26px"></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap-narrow center reveal">
+    <div class="card spot glow" style="padding:clamp(30px,5vw,50px)">
+      <span class="eyebrow">💌 One more room</span>
+      <h2>Six <span class="gradient-text">sealed letters</span></h2>
+      <p class="lead">Open the one that matches your day. They stay sealed until you choose.</p>
+      <a class="btn" href="letters.html" style="margin-top:12px">💌 Read the letters</a>
+    </div>
+  </div>
+</section>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+function initPage(){
+
+  /* ================= GIFT BOXES ================= */
+  var host = document.getElementById('gifts');
+  var opened = 0;
+  GIFTS.forEach(function(g){
+    var d = document.createElement('div');
+    d.className = 'card spot glow gift no-burst';
+    d.innerHTML =
+      '<div class="box"><span class="bow">🎀</span><div class="lid"></div>' +
+        '<div class="base"></div><div class="ribbon"></div></div>' +
+      '<h3>' + g.title + '</h3>' +
+      '<span class="ghint">' + g.hint + '</span>' +
+      '<div class="greveal"><span class="gemoji">' + g.emo + '</span><p>' + g.reveal + '</p></div>';
+    d.addEventListener('click', function(){
+      if (d.classList.contains('opened')) return;
+      d.classList.add('opened');
+      opened++;
+      A.confetti(48);
+      updateCount();
+      if (opened === GIFTS.length){
+        setTimeout(function(){
+          A.confetti(200);
+          A.toast('All six opened 🎉 Every one of them is real, ' + CONFIG.her + '.');
+        }, 500);
+      }
+    });
+    host.appendChild(d);
+  });
+
+  function updateCount(){
+    document.getElementById('giftCount').textContent =
+      opened === 0 ? 'None opened yet — go on 🎁'
+      : opened + ' of ' + GIFTS.length + ' opened' + (opened === GIFTS.length ? ' 🎉' : '');
+  }
+  updateCount();
+
+  /* ================= SCRATCH CARD ================= */
+  var cv = document.getElementById('scratchCanvas');
+  var ctx = cv.getContext('2d');
+  var scratching = false, done = false;
+
+  function paintCover(){
+    var r = cv.getBoundingClientRect();
+    cv.width = Math.max(1, Math.round(r.width));
+    cv.height = Math.max(1, Math.round(r.height));
+    var g = ctx.createLinearGradient(0, 0, cv.width, cv.height);
+    g.addColorStop(0, '#e0a23c');
+    g.addColorStop(.45, '#ffc96b');
+    g.addColorStop(.6, '#fff0cf');
+    g.addColorStop(1, '#c98a2e');
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, cv.width, cv.height);
+    ctx.fillStyle = 'rgba(120,70,10,.55)';
+    ctx.font = '600 15px "Plus Jakarta Sans", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('S C R A T C H   M E', cv.width / 2, cv.height / 2 - 4);
+    ctx.font = '500 11px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = 'rgba(120,70,10,.42)';
+    ctx.fillText('ALL OF IT', cv.width / 2, cv.height / 2 + 16);
+    ctx.font = '22px sans-serif';
+    ctx.fillText('🪙', cv.width / 2, cv.height / 2 + 44);
+  }
+  paintCover();
+  window.addEventListener('resize', function(){ if (!done) paintCover(); });
+
+  function scratchAt(e){
+    var r = cv.getBoundingClientRect();
+    var pt = e.touches ? e.touches[0] : e;
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(pt.clientX - r.left, pt.clientY - r.top, 26, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  function checkCleared(){
+    if (done) return;
+    var d = ctx.getImageData(0, 0, cv.width, cv.height).data;
+    var clear = 0;
+    for (var i = 3; i < d.length; i += 40) if (d[i] < 40) clear++;
+    if (clear / (d.length / 40) > 0.52){
+      done = true;
+      cv.style.transition = 'opacity .8s ease';
+      cv.style.opacity = '0';
+      setTimeout(function(){ cv.style.pointerEvents = 'none'; }, 800);
+      document.getElementById('scratchHint').textContent =
+        'Written by hand, kept for four years 💞';
+      document.getElementById('scratchAfter').classList.add('on');
+      A.confetti(160);
+      A.toast('Our two names, on actual paper 💕');
+    }
+  }
+
+  cv.addEventListener('mousedown', function(e){ scratching = true; scratchAt(e); });
+  cv.addEventListener('mousemove', function(e){ if (scratching) scratchAt(e); });
+  window.addEventListener('mouseup', function(){ if (scratching){ scratching = false; checkCleared(); } });
+  cv.addEventListener('touchstart', function(e){ scratching = true; scratchAt(e); e.preventDefault(); }, { passive:false });
+  cv.addEventListener('touchmove', function(e){ if (scratching) scratchAt(e); e.preventDefault(); }, { passive:false });
+  cv.addEventListener('touchend', function(){ scratching = false; checkCleared(); });
+
+  /* ================= WHEEL ================= */
+  var wc = document.getElementById('wheel');
+  var wx = wc.getContext('2d');
+  var N = WHEEL.length, seg = Math.PI * 2 / N, R = 300;
+  var cols = ['#ff4f81','#b58cff','#ffc96b','#5ee0d0','#ff7a5c','#8c6bff','#ffb347','#4fd1c5'];
+
+  function drawWheel(){
+    wx.clearRect(0, 0, 600, 600);
+    for (var i = 0; i < N; i++){
+      var a0 = i * seg - Math.PI / 2, a1 = a0 + seg;
+      wx.beginPath();
+      wx.moveTo(R, R);
+      wx.arc(R, R, R - 6, a0, a1);
+      wx.closePath();
+      wx.fillStyle = cols[i % cols.length];
+      wx.fill();
+      wx.strokeStyle = 'rgba(13,4,15,.35)';
+      wx.lineWidth = 3;
+      wx.stroke();
+
+      wx.save();
+      wx.translate(R, R);
+      wx.rotate(a0 + seg / 2);
+      wx.textAlign = 'right';
+      wx.fillStyle = '#2a0014';
+      wx.font = '700 23px "Plus Jakarta Sans", sans-serif';
+      var words = WHEEL[i].t.split(' ');
+      var line1 = words.slice(0, Math.ceil(words.length / 2)).join(' ');
+      var line2 = words.slice(Math.ceil(words.length / 2)).join(' ');
+      wx.fillText(line1, R - 58, -6);
+      wx.fillText(line2, R - 58, 20);
+      wx.font = '34px sans-serif';
+      wx.fillText(WHEEL[i].e, R - 20, 10);
+      wx.restore();
+    }
+  }
+  drawWheel();
+
+  var spinning = false, rot = 0;
+  document.getElementById('spinBtn').addEventListener('click', function(){
+    if (spinning) return;
+    spinning = true;
+    var idx = Math.floor(Math.random() * N);
+    // pointer sits at the top; land the middle of segment idx there
+    var target = 360 * 6 + (360 - (idx * (360 / N) + (360 / N) / 2));
+    rot += target;
+    wc.style.transform = 'rotate(' + rot + 'deg)';
+    document.getElementById('wheelOut').innerHTML =
+      '<p class="lead" style="margin:0">Spinning… 🎡</p>';
+
+    setTimeout(function(){
+      spinning = false;
+      var w = WHEEL[idx];
+      document.getElementById('wheelOut').innerHTML =
+        '<div class="wo"><span class="wemo">' + w.e + '</span>' +
+        '<h3 style="margin:.2em 0">' + w.t + '</h3>' +
+        '<p class="lead" style="margin:0">That is settled then. I am not arguing with a wheel.</p></div>';
+      A.confetti(90);
+    }, 4700);
+  });
+
+  /* ================= LOVE METER ================= */
+  var fill = document.getElementById('meterFill');
+  var val  = document.getElementById('meterVal');
+  var msg  = document.getElementById('meterMsg');
+  var msgs = [
+    'Instrument overloaded. Again.',
+    'The needle went past the end of the scale.',
+    'We have tried recalibrating. Same result every time.',
+    'Scientifically concerning. Personally, perfect.',
+    'The machine has given up and simply agrees.'
+  ];
+  function measure(){
+    fill.style.width = '0%';
+    val.textContent = '0%';
+    var pct = 100 + Math.floor(Math.random() * 900);
+    setTimeout(function(){
+      fill.style.width = '100%';
+      var t0 = null;
+      requestAnimationFrame(function step(ts){
+        if (!t0) t0 = ts;
+        var p = Math.min((ts - t0) / 2600, 1);
+        var e = 1 - Math.pow(1 - p, 3);
+        val.textContent = Math.round(pct * e).toLocaleString() + '%';
+        if (p < 1) requestAnimationFrame(step);
+        else { A.confetti(40); }
+      });
+      msg.textContent = A.pick(msgs);
+    }, 120);
+  }
+  if ('IntersectionObserver' in window){
+    var mio = new IntersectionObserver(function(en){
+      if (en[0].isIntersecting){ measure(); mio.disconnect(); }
+    }, { threshold:.4 });
+    mio.observe(document.querySelector('.meter'));
+  } else measure();
+  document.getElementById('meterBtn').addEventListener('click', measure);
+
+  /* ================= VAULT ================= */
+  var vIn  = document.getElementById('vaultInput');
+  var vOut = document.getElementById('vaultOut');
+  var tries = 0;
+
+  function tryUnlock(){
+    var v = vIn.value.replace(/\D/g, '');
+    if (v === CONFIG.secret){
+      document.getElementById('vault').querySelector('.eyebrow').innerHTML = '🔓 Unlocked';
+      document.getElementById('vaultHint').style.display = 'none';
+      vIn.parentNode.style.display = 'none';
+      var days = A.daysSince(CONFIG.start);
+      vOut.innerHTML =
+        '<div style="animation:popIn .8s var(--ease-back)">' +
+          '<div style="font-size:54px">💞</div>' +
+          '<p class="script" style="font-size:clamp(1.3rem,3.4vw,2rem);max-width:30ch;margin:14px auto 18px">' +
+            '“I would choose you again. Every single time, in every single version of this life.”' +
+          '</p>' +
+          '<p class="lead" style="margin-bottom:18px">' + days.toLocaleString() +
+            ' days ago you said yes to this, and you have not taken it back once. ' +
+            'Thank you for four years, ' + CONFIG.her + '. Here is to every one that comes next.</p>' +
+          '<p class="lead" style="font-size:.9rem">— ' + CONFIG.him + ' 💌</p>' +
+        '</div>';
+      A.confetti(260);
+      A.toast('You remembered. Of course you did. 💞');
+    } else {
+      tries++;
+      vIn.animate(
+        [{transform:'translateX(0)'},{transform:'translateX(-9px)'},
+         {transform:'translateX(9px)'},{transform:'translateX(0)'}],
+        { duration:330 }
+      );
+      var hints = ['Not quite 🙈', 'Try again 💭',
+                   'Hint: the day this all started, DDMMYYYY',
+                   'It is on the home page, in the first line 😉'];
+      A.toast(hints[Math.min(tries - 1, hints.length - 1)]);
+    }
+  }
+  document.getElementById('vaultBtn').addEventListener('click', tryUnlock);
+  vIn.addEventListener('keydown', function(e){ if (e.key === 'Enter') tryUnlock(); });
+}
+</script>
+</body>
+</html>

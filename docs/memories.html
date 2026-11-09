@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+<script src="assets/js/gate.js"></script>
+<title>Memories — Thanu &amp; Thamil</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,600&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+
+<section style="padding-bottom:24px">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">🧠 The memory room</span>
+      <h1 class="display" style="font-size:clamp(2.2rem,6vw,4.2rem)">Things I <span class="gradient-text">kept</span></h1>
+      <p class="lead">The exact times. A wall of polaroids, a jar full of small moments, and a quiz. No pressure on the quiz.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THE FIRSTS (with the times written down) ============ -->
+<section style="padding-top:0;padding-bottom:10px">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">⏱️ You wrote the times down</span>
+      <h2>Six <span class="gradient-text">first times</span></h2>
+      <p class="lead">Most people remember the day. We wrote down the minute.</p>
+    </div>
+    <div class="firsts stagger" id="firsts"></div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- ============ POLAROID WALL ============ -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">📌 Pinned to the wall</span>
+      <h2>The <span class="gradient-text">polaroid</span> wall</h2>
+      <p class="lead">Hover one and it straightens up. Tap it and it opens properly.</p>
+    </div>
+    <div class="polaroids" id="polaroids"></div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- ============ MEMORY JAR ============ -->
+<section style="padding-top:0">
+  <div class="wrap-narrow">
+    <div class="card spot glow reveal zoom jar" style="padding:clamp(34px,5vw,56px)">
+      <span class="eyebrow">🫙 The memory jar</span>
+      <h2>Pull out a <span class="gradient-text">random memory</span></h2>
+      <p class="lead">Every slip of paper in here is something that actually happened.</p>
+      <button class="jar-btn no-burst" id="jarBtn" aria-label="Open the jar">🫙</button>
+      <div class="jar-out" id="jarOut">
+        <p class="lead" style="margin:0">Tap the jar 👆</p>
+      </div>
+      <p class="lead" style="font-size:.84rem;margin-top:10px" id="jarCount"></p>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- ============ QUIZ ============ -->
+<section style="padding-top:0">
+  <div class="wrap-narrow">
+    <div class="section-head reveal">
+      <span class="eyebrow">❓ How well do you know us</span>
+      <h2>The <span class="gradient-text">us</span> quiz</h2>
+      <p class="lead" id="quizLead"></p>
+    </div>
+
+    <div class="card spot quiz reveal" id="quizCard" style="padding:clamp(26px,4vw,44px)">
+      <div class="q-prog"><i id="qBar"></i></div>
+      <div id="quizBody"></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap-narrow center reveal">
+    <div class="card spot glow" style="padding:clamp(30px,5vw,50px)">
+      <span class="eyebrow">🎁 Next room</span>
+      <h2>There are <span class="gradient-text">gifts</span> waiting</h2>
+      <p class="lead">Six boxes, a scratch card, a wheel, and one thing that is locked.</p>
+      <a class="btn" href="surprises.html" style="margin-top:12px">🎁 Open the surprises</a>
+    </div>
+  </div>
+</section>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+function initPage(){
+
+  /* ================= THE FIRSTS ================= */
+  /* Each card is a little clock face whose hands are set to the real time. */
+  var fh = document.getElementById('firsts');
+  FIRSTS.forEach(function(f, i){
+    var hands = '';
+    if (f.time){
+      var m = f.time.match(/^(\d+):(\d+)\s*(AM|PM)$/i);
+      if (m){
+        var hr = parseInt(m[1], 10) % 12, mi = parseInt(m[2], 10);
+        hands = '<span class="cl-h" style="transform:rotate(' +
+                  ((hr + mi / 60) * 30) + 'deg)"></span>' +
+                '<span class="cl-m" style="transform:rotate(' + (mi * 6) + 'deg)"></span>';
+      }
+    }
+    var d = document.createElement('div');
+    d.className = 'first-card card spot glow reveal zoom' + (f.star ? ' keyday' : '');
+    d.dataset.delay = i * 70;
+    d.innerHTML =
+      '<div class="clock' + (hands ? '' : ' noclock') + '">' +
+        (hands ? '<span class="cl-pin"></span>' + hands : '<span class="cl-emo">' + f.e + '</span>') +
+      '</div>' +
+      '<span class="first-when">' + A.shortDate(f.d) +
+        (f.time ? ' · <strong>' + f.time + '</strong>' : '') + '</span>' +
+      '<h3>' + f.e + ' ' + f.t + '</h3>' +
+      '<p>' + f.x + '</p>' +
+      '<span class="first-tam">' + f.tam + '</span>';
+    fh.appendChild(d);
+  });
+
+  /* ================= POLAROID WALL ================= */
+  var wall = document.getElementById('polaroids');
+  var pick = PHOTOS.slice().sort(function(a,b){ return a.date < b.date ? -1 : 1; });
+  var ids  = pick.map(function(p){ return p.id; });
+
+  pick.forEach(function(p, i){
+    var d = document.createElement('div');
+    d.className = 'polaroid reveal zoom';
+    d.style.setProperty('--rot', ((i % 5) - 2) * 3.2 + 'deg');
+    d.dataset.delay = Math.min(i, 14) * 50;
+    d.innerHTML =
+      '<span class="pin">📌</span>' +
+      '<img src="assets/thumbs/' + p.id + '.jpg" alt="' + p.cap + '" loading="lazy">' +
+      '<span class="pcap">' + p.cap + '</span>';
+    d.addEventListener('click', function(){ A.openLb(ids, i); });
+    wall.appendChild(d);
+  });
+
+  /* ================= MEMORY JAR ================= */
+  var seen = [];
+  var jarOut = document.getElementById('jarOut');
+  var jarCount = document.getElementById('jarCount');
+  jarCount.textContent = JAR.length + ' memories in the jar';
+
+  document.getElementById('jarBtn').addEventListener('click', function(){
+    if (seen.length >= JAR.length) seen = [];
+    var m;
+    do { m = A.pick(JAR); } while (seen.indexOf(m.t) > -1);
+    seen.push(m.t);
+
+    jarOut.innerHTML = '<div class="jar-note"><span class="jn-emo">' + m.e +
+      '</span><span class="jn-txt">' + m.t + '</span></div>';
+    jarCount.textContent = seen.length + ' of ' + JAR.length + ' pulled out';
+    A.confetti(22);
+    this.animate(
+      [{ transform:'rotate(0) scale(1)' },
+       { transform:'rotate(-16deg) scale(1.12)' },
+       { transform:'rotate(12deg) scale(1.08)' },
+       { transform:'rotate(0) scale(1)' }],
+      { duration:620, easing:'cubic-bezier(.34,1.56,.64,1)' }
+    );
+    if (seen.length === JAR.length){
+      A.toast('That is the whole jar 🫙 every single one of them real.');
+    }
+  });
+
+  /* ================= QUIZ ================= */
+  document.getElementById('quizLead').textContent =
+    QUIZ.length + ' questions. Every answer is somewhere on this site.';
+  var qi = 0, score = 0, locked = false;
+  var body = document.getElementById('quizBody');
+  var bar  = document.getElementById('qBar');
+
+  function drawQ(){
+    locked = false;
+    bar.style.width = (qi / QUIZ.length * 100) + '%';
+    var q = QUIZ[qi];
+    var html = '<p class="lead" style="font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;text-align:center">' +
+               'Question ' + (qi + 1) + ' of ' + QUIZ.length + '</p>' +
+               '<p class="q-text">' + q.q + '</p><div class="q-opts">';
+    q.o.forEach(function(opt, i){
+      html += '<button class="q-opt no-burst" data-i="' + i + '">' +
+              '<span class="k">' + 'ABCD'[i] + '</span><span>' + opt + '</span></button>';
+    });
+    html += '</div><p class="lead" id="qWhy" style="margin-top:18px;text-align:center;min-height:1.6em"></p>';
+    body.innerHTML = html;
+  }
+
+  function finish(){
+    bar.style.width = '100%';
+    var msg, emo;
+    if (score === QUIZ.length){ emo = '🏆'; msg = 'Every single one. You have been paying attention for four years.'; }
+    else if (score >= QUIZ.length - 2){ emo = '💖'; msg = 'Almost perfect. I would have got fewer, honestly.'; }
+    else { emo = '😄'; msg = 'Does not matter even slightly — you still get all the gifts.'; }
+
+    body.innerHTML =
+      '<div class="center" style="animation:popIn .7s var(--ease-back)">' +
+        '<div style="font-size:60px">' + emo + '</div>' +
+        '<h3 style="margin-top:10px">You got <span class="gradient-text">' + score + ' / ' + QUIZ.length + '</span></h3>' +
+        '<p class="lead">' + msg + '</p>' +
+        '<button class="btn ghost sm no-burst" id="qAgain">🔄 Try again</button> ' +
+        '<a class="btn sm" href="surprises.html">🎁 Claim your gifts</a>' +
+      '</div>';
+    A.confetti(score === QUIZ.length ? 170 : 80);
+    document.getElementById('qAgain').addEventListener('click', function(){
+      qi = 0; score = 0; drawQ();
+    });
+  }
+
+  body.addEventListener('click', function(e){
+    var btn = e.target.closest('.q-opt');
+    if (!btn || locked) return;
+    locked = true;
+    var q = QUIZ[qi];
+    var chosen = parseInt(btn.dataset.i, 10);
+    var opts = A.$$('.q-opt', body);
+
+    opts.forEach(function(o, i){
+      if (i === q.a) o.classList.add('right');
+      else if (i === chosen) o.classList.add('wrong');
+    });
+    if (chosen === q.a){ score++; A.confetti(26); }
+    document.getElementById('qWhy').textContent = q.why;
+
+    setTimeout(function(){
+      qi++;
+      if (qi >= QUIZ.length) finish(); else drawQ();
+    }, 2100);
+  });
+
+  drawQ();
+
+  A.observe('.polaroid');
+}
+</script>
+</body>
+</html>
