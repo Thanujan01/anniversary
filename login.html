@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Only you — Thanu &amp; Thamil</title>
+<meta name="description" content="Three dates stand between you and the rest of it.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,600&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/login.css">
+</head>
+<body class="login-body" data-bare="1">
+
+<div class="login-card" id="card">
+
+  <!-- ===================== THE TWO OF US ===================== -->
+  <div class="couple">
+    <img src="assets/photos/couple.png" alt="A cartoon sticker of the two of us">
+    <span class="c-h h1">💗</span>
+    <span class="c-h h2">💞</span>
+    <span class="c-h h3">💖</span>
+    <span class="c-s s1">✨</span>
+    <span class="c-s s2">✨</span>
+  </div>
+
+  <!-- ===================== THE GATE ===================== -->
+  <span class="eyebrow">🔐 Private — one person only</span>
+  <h1>Prove it's <span class="gradient-text">you</span></h1>
+  <p class="sub" id="sub">Three dates stand between you and four years of us. Nobody else on earth knows all three.</p>
+
+  <div class="locks" id="locks">
+    <div class="lock" data-i="0">🔒</div>
+    <div class="lock" data-i="1">🔒</div>
+    <div class="lock" data-i="2">🔒</div>
+  </div>
+
+  <div id="stageHost"></div>
+
+  <p class="login-foot">Three wrong tries and I'll start helping you 💭</p>
+</div>
+
+<!-- ===================== SUCCESS ===================== -->
+<div class="unlocked-screen" id="won">
+  <div class="unlocked-in">
+    <div class="u-emo">💞</div>
+    <h2>All three. <span class="gradient-text">Of course.</span></h2>
+    <p id="wonMsg">Come in, Thamil. All of it is yours.</p>
+    <button class="btn" id="enterBtn" style="margin-top:16px">Open the door →</button>
+  </div>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+var GATE = [
+  { no:'Lock one of three', emo:'💞',
+    ask:'The day we said yes to this',
+    note:'Our committed date — where the whole count begins',
+    a:'16/11/2022',
+    hints:['Not that one 🙈 try again',
+           'It was November 2022 💭',
+           'Every number on this site counts from it — the 16th 💞'] },
+
+  { no:'Lock two of three', emo:'🤝',
+    ask:'The day we first met',
+    note:'The very first time, face to face',
+    a:'21/11/2022',
+    hints:['Close, but not it 🙈',
+           'Also November 2022 💭',
+           'Five days after lock one 😉'] },
+
+  { no:'Lock three of three', emo:'💑',
+    ask:'Our first meetup as a couple',
+    note:'The first proper day out, just the two of us',
+    a:'11/12/2022',
+    hints:['Try once more 🙈',
+           'December 2022 💭',
+           'The whole free day — the 11th 💕'] }
+];
+
+function initPage(){
+  var host   = document.getElementById('stageHost');
+  var locks  = Array.prototype.slice.call(document.querySelectorAll('.lock'));
+  var card   = document.getElementById('card');
+  var won    = document.getElementById('won');
+  var step   = 0, wrong = 0;
+
+  document.getElementById('wonMsg').textContent =
+    'Come in, ' + CONFIG.her + '. All of it is yours.';
+
+  /* already unlocked this session? skip straight to the door */
+  var already = false;
+  try { already = sessionStorage.getItem('tt_unlocked') === 'yes'; } catch(e){}
+  if (already){
+    card.style.display = 'none';
+    won.classList.add('on');
+    document.getElementById('wonMsg').textContent = 'The door is already open for you 💞';
+    document.getElementById('enterBtn').addEventListener('click', go);
+    return;
+  }
+
+  function go(){ location.href = 'index.html'; }
+
+  function pad(v){ return v.length === 1 ? '0' + v : v; }
+
+  function drawStage(){
+    var q = GATE[step];
+    wrong = 0;
+    locks.forEach(function(l, i){ l.classList.toggle('now', i === step); });
+
+    host.innerHTML =
+      '<div class="stage" id="stage">' +
+        '<span class="q-no">' + q.emo + ' ' + q.no + '</span>' +
+        '<p class="q-ask">' + q.ask + '</p>' +
+        '<p class="q-note">' + q.note + '</p>' +
+        '<div class="date-row" id="row">' +
+          '<input class="dbox" id="dd" inputmode="numeric" data-len="2" placeholder="DD" aria-label="Day">' +
+          '<span class="sep">/</span>' +
+          '<input class="dbox" id="mm" inputmode="numeric" data-len="2" placeholder="MM" aria-label="Month">' +
+          '<span class="sep">/</span>' +
+          '<input class="dbox yr" id="yy" inputmode="numeric" data-len="4" placeholder="YYYY" aria-label="Year">' +
+        '</div>' +
+        '<div class="date-labels">' +
+          '<span class="l-d">Day</span><span class="l-gap"></span>' +
+          '<span class="l-m">Month</span><span class="l-gap"></span>' +
+          '<span class="l-y">Year</span>' +
+        '</div>' +
+        '<button class="btn no-burst" id="goBtn">🔓 Unlock this one</button>' +
+        '<p class="hintline" id="hint"></p>' +
+      '</div>';
+
+    var boxes = [document.getElementById('dd'),
+                 document.getElementById('mm'),
+                 document.getElementById('yy')];
+
+    function cap(b){ return parseInt(b.dataset.len, 10); }
+
+    /* Spill anything typed (or pasted) past a box's length into the next box,
+       so "16112022" typed quickly — or "16/11/2022" pasted — fills all three. */
+    function distribute(i, digits){
+      if (i >= boxes.length){ return; }
+      var b = boxes[i], n = cap(b);
+      b.value = digits.slice(0, n);
+      b.classList.toggle('filled', b.value.length === n);
+      var rest = digits.slice(n);
+      if (rest.length && boxes[i + 1]){
+        boxes[i + 1].focus();
+        distribute(i + 1, rest);
+      } else if (b.value.length === n && boxes[i + 1] && !boxes[i + 1].value){
+        boxes[i + 1].focus();
+      }
+    }
+
+    boxes.forEach(function(b, i){
+      b.addEventListener('input', function(){
+        distribute(i, b.value.replace(/\D/g, ''));
+      });
+      b.addEventListener('keydown', function(e){
+        if (e.key === 'Enter'){ e.preventDefault(); check(); }
+        if (e.key === 'Backspace' && !b.value && boxes[i - 1]){
+          boxes[i - 1].focus();
+        }
+      });
+      b.addEventListener('focus', function(){ b.select(); });
+    });
+
+    document.getElementById('goBtn').addEventListener('click', check);
+    setTimeout(function(){ boxes[0].focus(); }, 420);
+
+    function check(){
+      var d = boxes[0].value, m = boxes[1].value, y = boxes[2].value;
+      var hint = document.getElementById('hint');
+
+      if (!d || !m || y.length !== 4){
+        hint.className = 'hintline bad';
+        hint.textContent = 'Fill in the whole date first 💭';
+        return;
+      }
+
+      /* all three already answered — nothing left to check */
+      if (step >= GATE.length) return;
+
+      var given = pad(d) + '/' + pad(m) + '/' + y;
+
+      if (given === GATE[step].a){
+        hint.className = 'hintline good';
+        hint.textContent = 'That is the one 💞';
+        locks[step].classList.remove('now');
+        locks[step].classList.add('done');
+        locks[step].textContent = GATE[step].emo;
+        A.confetti(50);
+
+        step++;
+        if (step >= GATE.length){ setTimeout(win, 820); return; }
+
+        var st = document.getElementById('stage');
+        st.classList.add('out');
+        setTimeout(drawStage, 360);
+      } else {
+        wrong++;
+        var row = document.getElementById('row');
+        row.classList.remove('shake');
+        void row.offsetWidth;
+        row.classList.add('shake');
+        hint.className = 'hintline bad';
+        hint.textContent = GATE[step].hints[Math.min(wrong - 1, GATE[step].hints.length - 1)];
+        boxes[0].focus();
+        boxes[0].select();
+      }
+    }
+  }
+
+  function win(){
+    try { sessionStorage.setItem('tt_unlocked', 'yes'); } catch(e){}
+    card.classList.add('shut');
+    setTimeout(function(){
+      card.style.display = 'none';
+      won.classList.add('on');
+      A.confetti(260);
+      A.toast('Happy fourth anniversary, ' + CONFIG.her + ' 💞');
+      setTimeout(function(){ A.confetti(120); }, 900);
+    }, 760);
+    document.getElementById('enterBtn').addEventListener('click', go);
+    setTimeout(go, 6000);
+  }
+
+  drawStage();
+}
+</script>
+</body>
+</html>

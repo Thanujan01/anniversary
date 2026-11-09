@@ -1,0 +1,176 @@
+/* ============================================================
+   LOGIN — the three-date gate
+   ============================================================ */
+
+.login-body{
+  display:grid; grid-template-columns:1fr; min-height:100vh;
+  padding:clamp(18px,4vw,44px) 16px;
+  place-items:center;
+  /* `safe` keeps the top of the card reachable when it is taller
+     than the viewport — plain `center` would scroll it off-screen */
+  place-items:safe center;
+}
+
+.login-card{
+  position:relative; z-index:3;
+  width:min(600px, 94vw);
+  border-radius:var(--r-xl);
+  padding:clamp(22px,4vw,40px) clamp(20px,4vw,44px) clamp(28px,4vw,40px);
+  background:rgba(255,255,255,.055);
+  border:1px solid var(--line-2);
+  backdrop-filter:blur(22px) saturate(150%);
+  -webkit-backdrop-filter:blur(22px) saturate(150%);
+  box-shadow:var(--shadow);
+  text-align:center; overflow:hidden;
+  animation:cardIn 1s var(--ease-back) both .3s;
+}
+@keyframes cardIn{
+  from{ opacity:0; transform:translateY(42px) scale(.94) }
+  to{ opacity:1; transform:none }
+}
+.login-card::before{
+  content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit;
+  background:linear-gradient(135deg,rgba(255,255,255,.14),transparent 46%);
+}
+.login-card > *{ position:relative; z-index:1; }
+
+.login-card.shut{ animation:cardOut 1.05s var(--ease) forwards; }
+@keyframes cardOut{
+  35%{ transform:scale(1.05); }
+  100%{ transform:scale(1.5); opacity:0; filter:blur(12px); }
+}
+
+/* ---------- the two of us (sticker) ---------- */
+/* Height-driven so the card never grows taller than the screen;
+   the width follows from the sticker's own proportions. */
+.couple{
+  /* width derived from the height so the sticker keeps its proportions —
+     aspect-ratio alone loses to a block element's auto width */
+  --ch:min(300px,34vh);
+  position:relative; height:var(--ch); width:calc(var(--ch) * 620 / 756);
+  margin:0 auto 10px;
+}
+.couple::before{
+  content:""; position:absolute; left:50%; top:52%; z-index:0;
+  width:124%; height:92%; transform:translate(-50%,-50%); border-radius:50%;
+  background:radial-gradient(closest-side,rgba(255,79,129,.32),transparent 72%);
+  filter:blur(6px); animation:haloPulse 5s ease-in-out infinite;
+}
+.couple img{
+  position:relative; z-index:1; width:100%; height:100%;
+  object-fit:contain; display:block;
+  filter:drop-shadow(0 16px 26px rgba(0,0,0,.55));
+  animation:coupleBob 5.2s ease-in-out infinite;
+}
+@keyframes coupleBob{
+  0%,100%{ transform:translateY(0) rotate(-1deg) }
+  50%{ transform:translateY(-9px) rotate(1deg) }
+}
+@keyframes haloPulse{ 0%,100%{ opacity:.5 } 50%{ opacity:1 } }
+
+/* hearts drifting up and sparkles around them */
+.c-h,.c-s{ position:absolute; z-index:2; pointer-events:none; }
+.c-h{ font-size:18px; animation:riseH 4.4s ease-in-out infinite; }
+.c-h.h1{ left:-7%; top:44% }
+.c-h.h2{ right:-5%; top:26%; font-size:15px; animation-delay:1.5s }
+.c-h.h3{ right:9%; top:64%; font-size:13px; animation-delay:2.8s }
+.c-s{ font-size:13px; animation:twinkleS 2.8s ease-in-out infinite; }
+.c-s.s1{ left:2%; top:12% }
+.c-s.s2{ right:0%; bottom:16%; animation-delay:1.1s }
+@keyframes twinkleS{ 0%,100%{ opacity:.25; transform:scale(.7) } 50%{ opacity:1; transform:scale(1.25) } }
+@keyframes riseH{
+  0%{ opacity:0; transform:translateY(10px) scale(.6) }
+  35%{ opacity:1 }
+  100%{ opacity:0; transform:translateY(-30px) scale(1.1) }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .couple img,.couple::before,.c-h,.c-s{ animation:none; }
+  .c-h,.c-s{ opacity:.9; }
+}
+
+/* ---------- heading ---------- */
+.login-card h1{
+  font-size:clamp(1.5rem,4.4vw,2.2rem); margin:.2em 0 .25em;
+}
+.login-card .sub{ color:var(--muted); font-size:.95rem; margin:0 auto 20px; max-width:40ch; }
+
+/* ---------- lock chips ---------- */
+.locks{ display:flex; gap:10px; justify-content:center; margin-bottom:24px; }
+.lock{
+  width:46px; height:46px; border-radius:16px; display:grid; place-items:center;
+  font-size:19px; background:var(--glass); border:1px solid var(--line);
+  transition:all .6s var(--ease-back); position:relative;
+}
+.lock.now{ border-color:rgba(255,201,107,.55); box-shadow:0 0 0 4px rgba(255,201,107,.12);
+  animation:lockWait 2s ease-in-out infinite; }
+@keyframes lockWait{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-4px) } }
+.lock.done{
+  background:var(--grad-rose); border-color:transparent; color:#2d0014;
+  transform:rotate(-8deg) scale(1.1); box-shadow:0 10px 26px -8px rgba(255,79,129,.9);
+  animation:none;
+}
+
+/* ---------- question stage ---------- */
+.stage{ animation:stageIn .6s var(--ease-back) both; }
+.stage.out{ animation:stageOut .35s var(--ease) forwards; }
+@keyframes stageIn{ from{ opacity:0; transform:translateX(34px) } to{ opacity:1; transform:none } }
+@keyframes stageOut{ to{ opacity:0; transform:translateX(-34px) } }
+
+.q-no{ font-size:.7rem; font-weight:800; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--gold); display:block; margin-bottom:8px; }
+.q-ask{ font-family:var(--serif); font-size:clamp(1.15rem,3.1vw,1.55rem); line-height:1.3;
+  margin:0 auto 6px; max-width:26ch; }
+.q-note{ color:var(--faint); font-size:.82rem; margin:0 0 20px; }
+
+/* ---------- date inputs ---------- */
+.date-row{ display:flex; align-items:center; justify-content:center; gap:7px; margin-bottom:8px; }
+.date-row .sep{ font-size:1.5rem; color:var(--faint); font-weight:300; }
+.dbox{
+  width:clamp(54px,15vw,70px); height:clamp(58px,16vw,74px); border-radius:16px;
+  background:rgba(255,255,255,.07); border:1.5px solid var(--line-2);
+  color:#fff; font-family:var(--serif); font-size:clamp(1.3rem,4vw,1.7rem); font-weight:700;
+  text-align:center; outline:none; transition:all .3s var(--ease);
+  -moz-appearance:textfield;
+}
+.dbox.yr{ width:clamp(80px,22vw,104px); }
+.dbox::-webkit-outer-spin-button,.dbox::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+.dbox::placeholder{ color:rgba(255,255,255,.2); font-weight:400; }
+.dbox:focus{ border-color:var(--rose); background:rgba(255,79,129,.12);
+  box-shadow:0 0 0 4px rgba(255,79,129,.16); transform:translateY(-2px); }
+.dbox.filled{ border-color:rgba(255,201,107,.5); }
+
+.date-labels{ display:flex; justify-content:center; gap:7px; margin-bottom:20px; }
+.date-labels span{ font-size:.6rem; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--faint); text-align:center; }
+.date-labels .l-d,.date-labels .l-m{ width:clamp(54px,15vw,70px); }
+.date-labels .l-y{ width:clamp(80px,22vw,104px); }
+.date-labels .l-gap{ width:11px; }
+
+.shake{ animation:shakeX .45s; }
+@keyframes shakeX{
+  0%,100%{ transform:translateX(0) } 20%{ transform:translateX(-11px) }
+  40%{ transform:translateX(11px) } 60%{ transform:translateX(-7px) } 80%{ transform:translateX(7px) }
+}
+
+.hintline{ min-height:1.5em; font-size:.86rem; color:var(--rose-soft); margin:14px 0 0; }
+.hintline.bad{ color:#ff8fa3; }
+.hintline.good{ color:var(--aqua); }
+
+.login-foot{ margin-top:22px; font-size:.76rem; color:var(--faint); }
+
+/* ---------- success ---------- */
+.unlocked-screen{
+  position:fixed; inset:0; z-index:400; display:none; place-items:center; text-align:center;
+  padding:24px;
+}
+.unlocked-screen.on{ display:grid; }
+.unlocked-screen .u-emo{ font-size:clamp(60px,16vw,110px); animation:beat 1.1s ease-in-out infinite; }
+.unlocked-screen h2{ margin:.3em 0 .2em; }
+.unlocked-screen p{ color:var(--muted); }
+.unlocked-in{ animation:popIn .9s var(--ease-back) both; }
+
+@media (max-width:420px){
+  .couple{ --ch:min(250px,30vh); }
+  .locks{ gap:8px } .lock{ width:42px; height:42px; font-size:17px }
+}

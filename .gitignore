@@ -1,0 +1,30 @@
+# ---------------------------------------------------------------
+# What never leaves this computer.
+#
+# This repo is meant for a PRIVATE remote only. README.md documents
+# the three gate dates and the vault passcode in plain text, so a
+# public remote would give all of it away.
+# ---------------------------------------------------------------
+
+# The 152 MB of untouched originals. They stay on disk; the site
+# only ever uses the resized copies in assets/.
+img/
+
+# The images tools/resize-photos.py crops from. Leading slash matters:
+# bare "hero.jpg" would also match assets/photos/hero.jpg, which the site
+# needs, and the pushed copy would come out missing pictures.
+/hero.jpg
+/one.jpg
+/couple.webp
+
+# Your raw notes — the love story in your own words.
+relationship_memories_chronological.txt
+
+# Rebuilt on demand by tools/build-dist.py, never edited by hand.
+dist/
+
+# Editor and tooling state.
+.claude/
+*.rar
+Thumbs.db
+desktop.ini

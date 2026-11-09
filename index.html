@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="assets/js/gate.js"></script>
+<title>Thanu &amp; Thamil — Four Years</title>
+<meta name="description" content="A little museum of us. Four years, one story.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💞</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,600&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">🎊 Our Fourth Anniversary</span>
+      <h1 class="display">
+        <span class="l1">Happy Anniversary</span>
+        <span class="l2" id="heroDear"></span>
+        <span class="letters gradient-text" id="heroName">Thamil</span>
+      </h1>
+      <p class="lead hero-sub" id="heroTag"></p>
+
+      <div class="countdown mt-l" id="countdown"></div>
+      <p class="lead" id="cdCaption" style="font-size:.88rem;margin-top:14px"></p>
+
+      <div class="hero-actions">
+        <a class="btn" href="timeline.html">Start our story <span>→</span></a>
+        <a class="btn ghost" href="surprises.html">🎁 Open a surprise</a>
+      </div>
+    </div>
+
+    <div class="photo-stack" id="stack">
+      <span class="sticker s1">💕</span>
+      <span class="sticker s2">✨</span>
+      <span class="sticker s3">💞</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STATS ================= -->
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">📊 Us, in numbers</span>
+      <h2>Four years <span class="gradient-text">adds up</span></h2>
+      <p class="lead">Counted from 16 November 2022, and still going up while you read. Two of them we stopped counting a long time ago.</p>
+    </div>
+    <div class="stats stagger" id="stats"></div>
+  </div>
+</section>
+
+<!-- ================= TODAY'S MEMORY ================= -->
+<section style="padding-top:0">
+  <div class="wrap-narrow">
+    <div class="card spot glow reveal zoom center" style="padding:clamp(30px,5vw,48px)">
+      <span class="eyebrow">📅 Today's memory</span>
+      <div id="todayMem"></div>
+      <button class="btn ghost sm" id="anotherMem" style="margin-top:18px">🔄 Show me another</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HUB ================= -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">🗺️ Where to go</span>
+      <h2>Six rooms, all <span class="gradient-text">about you</span></h2>
+      <p class="lead">Take them in any order. There is something hidden in at least three of them.</p>
+    </div>
+    <div class="hub stagger" id="hub"></div>
+  </div>
+</section>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+function initPage(){
+
+  /* ---- hero name, letter by letter ---- */
+  document.getElementById('heroDear').textContent = CONFIG.herDear || '';
+
+  var host = document.getElementById('heroName');
+  /* what the big heading calls her — CONFIG.her stays "Thamil" for
+     the navbar, the toasts and the page titles */
+  var name = CONFIG.herPet || CONFIG.her;
+  host.innerHTML = '';
+  for (var i=0;i<name.length;i++){
+    var s = document.createElement('span');
+    s.textContent = name[i] === ' ' ? ' ' : name[i];
+    s.style.animationDelay = (0.55 + i*0.085) + 's';
+    host.appendChild(s);
+  }
+  document.getElementById('heroTag').textContent = CONFIG.tagline;
+
+  /* ---- hero photo ----
+     One card, cropped so both faces sit in the middle of the frame.
+     assets/photos/hero.jpg is made from hero.jpg in the project root
+     by tools/resize-photos.py, so it is not part of the numbered set. */
+  var stack = document.getElementById('stack');
+  var img = document.createElement('img');
+  img.className = 'ps solo';
+  img.src = 'assets/photos/hero.jpg';
+  img.alt = 'The two of us';
+  stack.insertBefore(img, stack.firstChild);
+
+  /* ---- countdown ---- */
+  A.countdown(document.getElementById('countdown'));
+  var left = Math.ceil((new Date(CONFIG.target+'T00:00:00') - Date.now())/86400000);
+  document.getElementById('cdCaption').textContent = left > 0
+    ? 'until ' + A.fmtDate(CONFIG.target) + ' — our fourth anniversary'
+    : 'It is here. ' + A.fmtDate(CONFIG.target) + ' ❤️';
+
+  /* ---- stats ---- */
+  var days  = A.daysSince(CONFIG.start);
+  var stats = [
+    { e:'📆', v:days,                  k:'Days together' },
+    { e:'💫', v:days/365,              k:'Years, exactly', dec:true },
+    { e:'📸', v:1000,                  k:'Photographs of us', suf:'+' },
+    { e:'🤝', v:null,                  k:'Meet-ups', txt:'countless' },
+    { e:'🕛', v:days*24,               k:'Hours of us' },
+    { e:'❤️', v:null,                  k:'Times I would do it again', txt:'∞' }
+  ];
+  var sHost = document.getElementById('stats');
+  stats.forEach(function(s){
+    var d = document.createElement('div');
+    d.className = 'card spot stat';
+    /* txt = a word instead of a number, so it never counts up */
+    d.innerHTML = '<span class="emoji">'+s.e+'</span><span class="val'+
+      (s.txt && s.txt.length > 2 ? ' word' : '')+'">'+(s.txt || '0')+'</span><span class="key">'+s.k+'</span>';
+    sHost.appendChild(d);
+    if (s.txt) return;
+    var node = d.querySelector('.val');
+    if (!('IntersectionObserver' in window)) { node.textContent = s.dec ? s.v.toFixed(2) : s.v.toLocaleString()+(s.suf||''); return; }
+    var io = new IntersectionObserver(function(en){
+      if(!en[0].isIntersecting) return;
+      if (s.dec){
+        var t0=null;
+        requestAnimationFrame(function step(ts){
+          if(!t0) t0=ts;
+          var p=Math.min((ts-t0)/1700,1), e=1-Math.pow(1-p,3);
+          node.textContent=(s.v*e).toFixed(2);
+          if(p<1) requestAnimationFrame(step);
+        });
+      } else A.countUp(node, s.v, 1700, s.suf);
+      io.disconnect();
+    },{threshold:.4});
+    io.observe(d);
+  });
+
+  /* ---- today's memory ---- */
+  var memBox = document.getElementById('todayMem');
+  function showMem(){
+    var m = A.pick(JAR);
+    memBox.innerHTML = '<div class="jar-note"><span class="jn-emo">'+m.e+
+      '</span><span class="jn-txt">'+m.t+'</span></div>';
+  }
+  showMem();
+  document.getElementById('anotherMem').addEventListener('click', function(){
+    showMem(); A.confetti(16);
+  });
+
+  /* ---- hub cards ---- */
+  var rooms = [
+    { h:'timeline.html',  i:'🗓️', t:'Our Story',  d:TIMELINE.length+' moments in order, from the first message at 10:44 at night to right now.' },
+    { h:'albums.html',    i:'📸', t:'Albums',     d:'All '+PHOTOS.length+' photographs, split by year and by what we were doing.' },
+    { h:'memories.html',  i:'🧠', t:'Memories',   d:'The six first times with the exact minute, a polaroid wall, the jar and a quiz.' },
+    { h:'surprises.html', i:'🎁', t:'Surprises',  d:'Six gift boxes, something under the gold, a spinning wheel and a locked vault.' },
+    { h:'letters.html',   i:'💌', t:'Letters',    d:'Six sealed envelopes. Open the one that matches your day.' },
+    { h:'letters.html#reasons', i:'💭', t:'16 Reasons', d:'Sixteen cards, one reason each. Flip every single one.' }
+  ];
+  var hub = document.getElementById('hub');
+  rooms.forEach(function(r){
+    var a = document.createElement('a');
+    a.className = 'card spot glow hub-card';
+    a.href = r.h;
+    a.innerHTML = '<span class="hc-ico">'+r.i+'</span><h3>'+r.t+'</h3><p>'+r.d+
+      '</p><span class="go">Open <span class="arw">→</span></span>';
+    hub.appendChild(a);
+  });
+
+  setTimeout(function(){ A.confetti(55); }, 1500);
+}
+</script>
+</body>
+</html>
