@@ -20,7 +20,11 @@ img/
 # Your raw notes — the love story in your own words.
 relationship_memories_chronological.txt
 
-# Rebuilt on demand by tools/build-dist.py, never edited by hand.
+# The gate dates and the vault passcode, written out in plain English.
+# This repo is public so Pages can serve docs/, so they do not belong in it.
+PRIVATE-NOTES.md
+
+# Old output folder name; docs/ replaced it and IS committed.
 dist/
 
 # Editor and tooling state.

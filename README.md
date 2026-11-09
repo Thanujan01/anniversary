@@ -3,6 +3,12 @@
 A six-page animated anniversary site, built from your own photos and your own
 list of dates.
 
+> **This repository is public**, because GitHub Pages on a free account only
+> serves public repositories. Everything here — including all 63 photographs —
+> can be read by anyone who finds it. The gate on `login.html` does not change
+> that: its answers are in the page source. Keep that in mind before adding
+> anything here you would not want read.
+
 ## How to open it
 
 Double-click **`login.html`**. It works straight from the file — no server, no internet
@@ -18,6 +24,31 @@ python -m http.server 8777
 ```
 
 …then open `http://<your-computer-ip>:8777` on the phone while on the same wifi.
+
+## Putting it online
+
+The published copy lives in **`docs/`**, and GitHub Pages serves that folder. Only
+the seven pages and the four asset folders they reference go in it — `README.md`,
+`PRIVATE-NOTES.md`, `tools/`, `img/` and the originals never do.
+
+Rebuild it after any change and push:
+
+```bash
+python tools/build-dist.py
+git add docs && git commit -m "Rebuild the published site" && git push
+```
+
+GitHub Pages is switched on under **Settings → Pages**, with the source set to
+branch `main`, folder `/docs`. The first build takes a couple of minutes.
+
+Every page in `docs/` carries a `noindex` meta and there is a `robots.txt`, so
+search engines are asked to stay away. That is a request, not a wall — the link
+works for anyone who has it.
+
+The `_headers` file in `docs/` is for Cloudflare and is ignored by GitHub Pages.
+
+Pushes from a slow connection may fail on a single large upload; see
+`tools/push-in-batches.sh`.
 
 ## Where the content comes from
 
@@ -44,10 +75,12 @@ celebrated a day early. They are collected in the **Birthdays** album.
 
 | Lock | Question | Answer |
 |---|---|---|
-| 1 💞 | The day we said yes to this | **16 / 11 / 2022** |
-| 2 🤝 | The day we first met | **21 / 11 / 2022** |
-| 3 💑 | Our first meetup as a couple | **11 / 12 / 2022** |
+| 1 💞 | The day we said yes to this | see `PRIVATE-NOTES.md` |
+| 2 🤝 | The day we first met | see `PRIVATE-NOTES.md` |
+| 3 💑 | Our first meetup as a couple | see `PRIVATE-NOTES.md` |
 
+The three dates are in **`PRIVATE-NOTES.md`**, which stays on your computer and is not
+in this repository — this repo is public so that GitHub Pages can serve the site.
 All three are confirmed by your own memories file. Wrong answers shake the box and give a
 hint — gentler each time, and the third hint on each lock basically gives it away, so she
 can never get properly stuck. All three right → the card bursts open, confetti, door opens.
@@ -81,7 +114,7 @@ To change the questions or answers, edit the `GATE` array near the bottom of `lo
 ## Hidden bits
 
 - **Scratch the whole gold panel** on *Surprises* — `one.jpg` is underneath it.
-- **The vault passcode** is `16112022` (your date, DDMMYYYY).
+- **The vault passcode** is in `PRIVATE-NOTES.md` (it is your date, DDMMYYYY).
 - Flip **all 16** reason cards on *Letters* for a bonus card.
 - Open **all 6** gift boxes for a confetti storm.
 - Empty the memory jar — all 16 — for a message.

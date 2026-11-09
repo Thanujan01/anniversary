@@ -1,5 +1,5 @@
 """
-Build dist/ — the folder that actually gets uploaded.
+Build docs/ — the folder GitHub Pages serves.
 
 Everything the site needs, and nothing else. In particular it leaves out:
 
@@ -16,7 +16,7 @@ Cloudflare send X-Robots-Tag on every response.
 
     python tools/build-dist.py
 
-Then deploy dist/ (see README.md, "Putting it online").
+Commit docs/ and push; GitHub Pages serves it (see README.md).
 """
 
 import os
@@ -24,7 +24,12 @@ import re
 import shutil
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DIST = os.path.join(ROOT, "dist")
+
+# docs/ is what GitHub Pages serves, so unlike the rest of the build output
+# it IS committed. Pages can publish from the repo root or from docs/, and
+# docs/ is the one that keeps README.md, tools/ and data.js out of the
+# served site.
+DIST = os.path.join(ROOT, "docs")
 
 # Only these asset folders are referenced by the pages. assets/tiny is
 # deliberately absent — resize-photos.py still makes it, nothing uses it.
@@ -87,7 +92,7 @@ def build():
         for dp, _, fs in os.walk(DIST)
         for f in fs
     )
-    print("dist/  %d pages, %d files, %.1f MB" % (pages, files, size / 1048576.0))
+    print("docs/  %d pages, %d files, %.1f MB" % (pages, files, size / 1048576.0))
 
     # A loud check: none of the private files should have made it in.
     banned = ["README.md", "relationship_memories_chronological.txt",
@@ -95,7 +100,7 @@ def build():
     here = os.listdir(DIST)
     leaked = [b for b in banned if b in here]
     if leaked:
-        raise SystemExit("private file(s) in dist: %s" % ", ".join(leaked))
+        raise SystemExit("private file(s) in docs: %s" % ", ".join(leaked))
     print("private files kept out: ok")
 
 
