@@ -119,7 +119,7 @@ To change the questions or answers, edit the `GATE` array near the bottom of `lo
 - Open **all 6** gift boxes for a confetti storm.
 - Empty the memory jar — all 16 — for a message.
 - Tap anywhere on a page: little hearts burst out.
-- On the login, typing `16112022` straight into the first box fills all three, and pasting
+- On the login, typing the first date's eight digits straight into the first box fills all three, and pasting
   a whole date works too.
 - The **🔇 button** in the navbar plays a soft melody, generated in the browser — no audio file.
 
