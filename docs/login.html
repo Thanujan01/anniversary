@@ -41,7 +41,7 @@
 
   <div id="stageHost"></div>
 
-  <p class="login-foot">Three wrong tries and I'll start helping you 💭</p>
+  <p class="login-foot">Three wrong tries and I'll tell you who to ask 💭</p>
 </div>
 
 <!-- ===================== SUCCESS ===================== -->
@@ -62,25 +62,27 @@ var GATE = [
     ask:'The day we said yes to this',
     note:'Our committed date — where the whole count begins',
     a:'16/11/2022',
+    /* Nothing here gives the date away. The third one is shown for every
+       wrong try after that too, because check() clamps to the last hint. */
     hints:['Not that one 🙈 try again',
-           'It was November 2022 💭',
-           'Every number on this site counts from it — the 16th 💞'] },
+           'Still not it 💭 have another go',
+           'Ask the password to Thanu 💞'] },
 
   { no:'Lock two of three', emo:'🤝',
     ask:'The day we first met',
     note:'The very first time, face to face',
     a:'21/11/2022',
     hints:['Close, but not it 🙈',
-           'Also November 2022 💭',
-           'Five days after lock one 😉'] },
+           'Still not it 💭 have another go',
+           'Ask the password to Thanu 🤝'] },
 
   { no:'Lock three of three', emo:'💑',
     ask:'Our first meetup as a couple',
     note:'The first proper day out, just the two of us',
     a:'11/12/2022',
     hints:['Try once more 🙈',
-           'December 2022 💭',
-           'The whole free day — the 11th 💕'] }
+           'Still not it 💭 have another go',
+           'Ask the password to Thanu 💑'] }
 ];
 
 function initPage(){

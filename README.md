@@ -81,9 +81,14 @@ celebrated a day early. They are collected in the **Birthdays** album.
 
 The three dates are in **`PRIVATE-NOTES.md`**, which stays on your computer and is not
 in this repository — this repo is public so that GitHub Pages can serve the site.
-All three are confirmed by your own memories file. Wrong answers shake the box and give a
-hint — gentler each time, and the third hint on each lock basically gives it away, so she
-can never get properly stuck. All three right → the card bursts open, confetti, door opens.
+All three are confirmed by your own memories file. Wrong answers shake the box. The first
+two say only that it is wrong — **no hint reveals any part of a date**. From the third wrong
+try onwards, every lock says *"Ask the password to Thanu"*, and keeps saying it however many
+times she tries. All three right → the card bursts open, confetti, door opens.
+
+To reword any of that, edit the `hints` arrays in the `GATE` list near the bottom of
+`login.html`. The last entry in each array is the one shown from the third try on, because
+`check()` clamps the index to the end of the list.
 
 Your cartoon sticker of the two of you sits at the top. The file you sent had the
 transparency checkerboard baked into the pixels, so that was cut away, the white
